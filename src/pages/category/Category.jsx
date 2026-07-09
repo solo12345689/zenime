@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import getCategoryInfo from "@/src/utils/getCategoryInfo.utils";
 import CategoryCard from "@/src/components/categorycard/CategoryCard";
 import Genre from "@/src/components/genres/Genre";
-import Topten from "@/src/components/topten/Topten";
 import Error from "@/src/components/error/Error";
 import { useHomeInfo } from "@/src/context/HomeInfoContext";
 import PageSlider from "@/src/components/pageslider/PageSlider";
@@ -19,61 +18,39 @@ function Category({ path, label }) {
 
   const page = parseInt(searchParams.get("page")) || 1;
   const { homeInfo, homeInfoLoading } = useHomeInfo();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategoryInfo = async () => {
+    const fetchCategoryData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const data = await getCategoryInfo(path, page);
         setCategoryInfo(data.data);
-        setTotalPages(data.totalPages);
-        setLoading(false);
+        setTotalPages(data.totalPage);
       } catch (err) {
-        setError(err);
         console.error("Error fetching category info:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchCategoryInfo();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    fetchCategoryData();
   }, [path, page]);
 
-  if (error) {
-    navigate("/error-page");
-    return <Error />;
-  }
-  if (!categoryInfo && !loading) {
-    navigate("/404-not-found-page");
-    return null;
-  }
-
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage });
+    if (newPage > 0 && newPage <= totalPages) {
+      setSearchParams({ page: newPage });
+    }
   };
 
-  return (
-    <div className="w-full flex flex-col gap-y-4 mt-[64px] max-md:mt-[50px]">
-      <div className="w-full flex gap-x-4 items-center bg-[#191826] p-5 max-[575px]:px-3 max-[320px]:hidden">
-        <img
-          src="https://i.postimg.cc/d34WWyNQ/share-icon.gif"
-          alt="Share Anime"
-          className="w-[60px] h-auto rounded-full max-[1024px]:w-[40px] max-[575px]:hidden"
-        />
-        <div className="flex flex-col w-fit">
-          <p className="text-[15px] font-bold text-[#FFBADE]">Share Anime</p>
-          <p className="text-[16px] text-white">to your friends</p>
-        </div>
-      </div>
+  if (error) return <Error />;
 
-      <div className="w-full px-4 grid grid-cols-[minmax(0,75%),minmax(0,25%)] gap-x-6 max-[1200px]:flex max-[1200px]:flex-col max-[1200px]:gap-y-10">
+  return (
+    <div className="w-full px-4 max-[1200px]:px-0">
+      <div className="grid grid-cols-[minmax(0,75%),minmax(0,25%)] gap-x-6 max-[1200px]:flex flex-col max-[1200px]:px-4">
         <div>
           {loading ? (
-            <CategoryCardLoader className="mt-5" />
-          ) : page > totalPages ? (
-            <p className="font-bold text-2xl text-[#ffbade] max-[478px]:text-[18px] max-[300px]:leading-6">
-              You came a long way, go back <br className="max-[300px]:hidden" />
-              nothing is here
-            </p>
+            <CategoryCardLoader />
           ) : (
             <>
               {categoryInfo && categoryInfo.length > 0 && (
@@ -100,9 +77,6 @@ function Category({ path, label }) {
             <SidecardLoader />
           ) : (
             <>
-              {homeInfo?.topten && (
-                <Topten data={homeInfo.topten} className="mt-0" />
-              )}
               {homeInfo?.genres && <Genre data={homeInfo.genres} />}
             </>
           )}

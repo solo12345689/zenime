@@ -1,6 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Error from "../error/Error";
-import Topten from "../topten/Topten";
 import Genre from "../genres/Genre";
 import SidecardLoader from "../Loader/Sidecard.loader";
 import PageSlider from "../pageslider/PageSlider";
@@ -85,9 +84,6 @@ function Producer() {
               <SidecardLoader />
             ) : (
               <>
-                {homeInfo && homeInfo.topten && (
-                  <Topten data={homeInfo.topten} className="mt-0" />
-                )}
                 {homeInfo?.genres && <Genre data={homeInfo.genres} />}
               </>
             )}
