@@ -12,8 +12,6 @@ import getTopSearch from "@/src/utils/getTopSearch.utils";
 // Static data moved outside the component
 const NAV_LINKS = [
   { to: "/home", label: "Home" },
-  { to: "/movie", label: "Movies" },
-  { to: "/tv", label: "TV Series" },
   { to: "/most-popular", label: "Most Popular" },
   { to: "/top-airing", label: "Top Airing" },
 ];
