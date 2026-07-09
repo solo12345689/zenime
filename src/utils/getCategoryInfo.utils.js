@@ -39,11 +39,12 @@ const getCategoryInfo = async (path, page) => {
     
     if (path.startsWith("genre/")) {
       const genreSlug = path.split("/").pop();
-      const response = await axios.get(`${api_url}/search/advanced?q=${genreSlug}&page=${page}`);
+      const response = await axios.get(`${api_url}/search/advanced?genre[]=${genreSlug}&page=${page}`);
       const list = (response.data.results || []).map(mapItem);
       return {
         data: list,
         totalPages: response.data.max_pages || 1,
+        totalPage: response.data.max_pages || 1,
       };
     }
 
