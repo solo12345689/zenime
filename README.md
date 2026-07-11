@@ -1,7 +1,6 @@
 <p align="center">
-  <p align="center"><b><span style="color:red;">This project won't get future updates, it's been discontinued. Thanks for your support</span></b></p>
   <div align="center">
-    <a href="https://zenime.site/">
+    <a href="https://zenimes.onrender.com/">
       <img alt="AnimeHi" src="https://raw.githubusercontent.com/itzzzme/zenime/refs/heads/main/public/logo.png" width="220"/>
     </a>
   </div>
@@ -17,7 +16,7 @@
 </p>
 </p>
 <p align="center">
-    <a href="https://zenime.site">Zenime</a> is an open-source anime streaming service that uses <a href="https://github.com/itzzzme/anime-api">custom</a> API, built using ReactJS with javascript and Tailwind CSS. It lets you easily find any anime with intuitive search & suggestion feature and stream seamlessly.
+    <a href="https://zenimes.onrender.com/">Zenime</a> is an open-source anime streaming service that uses <a href="https://github.com/solo12345689/DesiDubAnime-api">custom</a> API, built using ReactJS with javascript and Tailwind CSS. It lets you easily find any anime with intuitive search & suggestion feature and stream seamlessly.
  </p>
 
 <details>
@@ -101,13 +100,13 @@ docker run -d -p 5173:80 zenime
 
 ### Vercel
 
-Host your own instance of <a href="https://zenime.site">Zenime</a>  on vercel
+Host your own instance of <a href="https://zenimes.onrender.com/">Zenime</a>  on vercel
 
 [![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/itzzzme/zenime)
 
 ### Render
 
-Host your own instance of <a href="https://zenime.site">Zenime</a> on Render.
+Host your own instance of <a href="https://zenimes.onrender.com/">Zenime</a> on Render.
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/itzzzme/zenime)
 
