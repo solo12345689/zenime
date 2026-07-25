@@ -170,6 +170,37 @@ function SplashScreen() {
             />
           </div>
         </div>
+
+        {/* SEO Text Block for Search Engine Ranking & Crawler Indexing */}
+        <div className="w-full mt-10 bg-[#2B2A3C] rounded-[30px] p-8 text-left text-gray-300 space-y-4 max-[520px]:px-5 max-[520px]:py-6 max-[520px]:rounded-[20px]">
+          <h1 className="text-2xl font-bold text-white max-[600px]:text-xl">
+            Watch Anime Online Free on Zenime
+          </h1>
+          <p className="text-[15px] leading-relaxed text-gray-300">
+            Discover and stream popular anime series, movies, <strong>Hindi dubbed anime</strong>, and <strong>English-subtitled anime</strong> on <strong>Zenime</strong>. Enjoy high-definition 1080p anime streaming with daily episode updates, fast video servers, and zero ad interruptions. Search for your favorite anime shows or explore top-trending series anytime for free.
+          </p>
+
+          <h2 className="text-lg font-semibold text-[#FFBADE] pt-2">
+            Explore Popular Anime & Categories
+          </h2>
+          <div className="flex flex-wrap gap-3 pt-1">
+            <Link to="/home" className="bg-[#373646] px-4 py-2 rounded-lg text-sm text-white hover:bg-[#FFBADE] hover:text-black transition-all">
+              Watch Anime Homepage
+            </Link>
+            <Link to="/most-popular" className="bg-[#373646] px-4 py-2 rounded-lg text-sm text-white hover:bg-[#FFBADE] hover:text-black transition-all">
+              Most Popular Anime
+            </Link>
+            <Link to="/top-airing" className="bg-[#373646] px-4 py-2 rounded-lg text-sm text-white hover:bg-[#FFBADE] hover:text-black transition-all">
+              Top Airing Anime
+            </Link>
+            <Link to="/completed" className="bg-[#373646] px-4 py-2 rounded-lg text-sm text-white hover:bg-[#FFBADE] hover:text-black transition-all">
+              Completed Series
+            </Link>
+            <Link to="/az-list" className="bg-[#373646] px-4 py-2 rounded-lg text-sm text-white hover:bg-[#FFBADE] hover:text-black transition-all">
+              A-Z Anime List
+            </Link>
+          </div>
+        </div>
       </div>
       <div className="mt-10 text-[14px] text-center pb-4">
         © {logoTitle} All rights reserved.

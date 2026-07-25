@@ -18,6 +18,7 @@ function Home() {
   return (
     <>
       <div className="px-4 w-full max-[1200px]:px-0">
+        <h1 className="sr-only">Watch Free Anime Online | Hindi & English Sub/Dub Anime - Zenime</h1>
         <Spotlight spotlights={homeInfo.spotlights} />
         <ContinueWatching />
         <Trending trending={homeInfo.trending} />
