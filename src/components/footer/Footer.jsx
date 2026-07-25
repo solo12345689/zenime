@@ -43,6 +43,22 @@ function Footer() {
             </Link>
           ))}
         </div>
+        {/* SEO Text Block for Search Engine Ranking */}
+        <div className="flex flex-col w-full text-left space-y-3 pt-6 border-t border-[rgba(255,255,255,0.075)] text-[#9B9BA3] text-sm">
+          <h1 className="text-xl font-bold text-white max-md:text-lg">
+            Watch Free Anime Online | Free Anime Streaming on {website_name}
+          </h1>
+          <p className="leading-relaxed">
+            Welcome to <strong>{website_name}</strong>, your ultimate destination to <strong>watch free anime online</strong> in high definition. Stream popular series, latest episodes, top movies, and trending anime shows in 1080p and 720p HD. Whether you are looking for <strong>free anime</strong>, <strong>Hindi anime</strong>, <strong>English Subbed</strong>, or <strong>English Dubbed anime</strong>, {website_name} brings you unlimited <strong>anime streaming</strong> with zero ads and fast loading servers.
+          </p>
+          <h2 className="text-md font-semibold text-white mt-2">
+            Watch Hindi Anime & Dubbed Anime Streaming
+          </h2>
+          <p className="leading-relaxed">
+            Enjoy watching <strong>Hindi anime</strong> and dubbed anime online effortlessly. {website_name} updates daily with new anime releases, classic series, and upcoming shows so you never miss out on your favorite action, romance, fantasy, and adventure anime.
+          </p>
+        </div>
+
         <div className="flex flex-col w-full text-left space-y-2 pt-4 max-md:items-center max-[470px]:px-[5px]">
           <p className="text-[#9B9BA3] text-[16px] max-md:text-center max-md:text-[12px]">
             {website_name} does not host any files, it merely pulls streams from
