@@ -26,10 +26,36 @@ function fetchJson(url) {
   });
 }
 
+function escapeXml(unsafe) {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case "&":
+        return "&amp;";
+      case "'":
+        return "&apos;";
+      case '"':
+        return "&quot;";
+      default:
+        return c;
+    }
+  });
+}
+
 async function generateSitemap() {
   console.log("Generating sitemap.xml from backend API:", API_BASE);
-  const urls = new Set();
+  const urlMap = new Map();
   const currentDate = new Date().toISOString();
+
+  const addUrl = (loc, priority) => {
+    if (!loc) return;
+    if (!urlMap.has(loc)) {
+      urlMap.set(loc, { loc, priority });
+    }
+  };
 
   // 1. Add Core Static Routes
   const staticRoutes = [
@@ -41,9 +67,9 @@ async function generateSitemap() {
     "/recently-updated",
     "/recently-added",
     "/top-upcoming",
-    "/az-list"
+    "/az-list",
   ];
-  staticRoutes.forEach((route) => urls.add({ loc: `${DOMAIN}${route}`, priority: "1.00" }));
+  staticRoutes.forEach((route) => addUrl(`${DOMAIN}${route}`, "1.00"));
 
   // 2. Fetch Home Data
   const homeData = await fetchJson(`${API_BASE}/home`);
@@ -58,7 +84,7 @@ async function generateSitemap() {
       homeData.upcoming,
       homeData.popular_today,
       homeData.popular_weekly,
-      homeData.popular_monthly
+      homeData.popular_monthly,
     ];
 
     collections.forEach((col) => {
@@ -66,8 +92,8 @@ async function generateSitemap() {
         col.forEach((item) => {
           const slug = item.slug || item.id;
           if (slug) {
-            urls.add({ loc: `${DOMAIN}/${slug}`, priority: "0.80" });
-            urls.add({ loc: `${DOMAIN}/watch/${slug}`, priority: "0.70" });
+            addUrl(`${DOMAIN}/${slug}`, "0.80");
+            addUrl(`${DOMAIN}/watch/${slug}`, "0.70");
           }
         });
       }
@@ -76,10 +102,11 @@ async function generateSitemap() {
     // Add Genres
     if (Array.isArray(homeData.genres)) {
       homeData.genres.forEach((genre) => {
-        const genreSlug = typeof genre === "string" ? genre : genre.id || genre.name;
+        const genreSlug =
+          typeof genre === "string" ? genre : genre.id || genre.name;
         if (genreSlug) {
           const formattedGenre = genreSlug.toLowerCase().replace(/\s+/g, "-");
-          urls.add({ loc: `${DOMAIN}/genre/${formattedGenre}`, priority: "0.70" });
+          addUrl(`${DOMAIN}/genre/${formattedGenre}`, "0.70");
         }
       });
     }
@@ -91,7 +118,7 @@ async function generateSitemap() {
     `${API_BASE}/category/most-popular?page=2`,
     `${API_BASE}/category/top-airing?page=1`,
     `${API_BASE}/category/top-airing?page=2`,
-    `${API_BASE}/category/completed?page=1`
+    `${API_BASE}/category/completed?page=1`,
   ];
 
   for (const pageUrl of pagesToFetch) {
@@ -100,15 +127,14 @@ async function generateSitemap() {
       pageData.animes.forEach((item) => {
         const slug = item.slug || item.id;
         if (slug) {
-          urls.add({ loc: `${DOMAIN}/${slug}`, priority: "0.80" });
-          urls.add({ loc: `${DOMAIN}/watch/${slug}`, priority: "0.70" });
+          addUrl(`${DOMAIN}/${slug}`, "0.80");
+          addUrl(`${DOMAIN}/watch/${slug}`, "0.70");
         }
       });
     }
   }
 
-  // Convert Set to Array and build XML
-  const urlEntries = Array.from(urls);
+  const urlEntries = Array.from(urlMap.values());
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -117,7 +143,7 @@ async function generateSitemap() {
 ${urlEntries
   .map(
     (entry) => `  <url>
-    <loc>${entry.loc}</loc>
+    <loc>${escapeXml(entry.loc)}</loc>
     <lastmod>${currentDate}</lastmod>
     <priority>${entry.priority}</priority>
   </url>`
@@ -126,7 +152,9 @@ ${urlEntries
 </urlset>`;
 
   fs.writeFileSync(SITEMAP_PATH, xml, "utf8");
-  console.log(`Successfully generated sitemap.xml with ${urlEntries.length} URLs at ${SITEMAP_PATH}`);
+  console.log(
+    `Successfully generated sitemap.xml with ${urlEntries.length} unique URLs at ${SITEMAP_PATH}`
+  );
 }
 
 generateSitemap();
