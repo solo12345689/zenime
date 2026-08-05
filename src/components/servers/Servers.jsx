@@ -54,9 +54,12 @@ function Servers({
             <p className="text-center leading-5 font-medium text-[14px]">
               You are watching <br />
               <span className="font-semibold max-[600px]:text-[#ffbade]">
-                Episode {activeEpisodeNum}
+                {activeEpisodeNum && (String(activeEpisodeNum).toLowerCase().startsWith("episode") || String(activeEpisodeNum).toLowerCase().startsWith("ep"))
+                  ? activeEpisodeNum
+                  : `Episode ${activeEpisodeNum}`}
               </span>
             </p>
+
             <p className="leading-5 text-[14px] font-medium text-center">
               If the current server doesn&apos;t work, please try other servers
               beside.
