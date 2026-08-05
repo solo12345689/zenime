@@ -11,13 +11,17 @@ export default function Player({ streamUrl }) {
   }
 
   return (
-    <div className="w-full h-full bg-black relative">
+    <div className="w-full h-full min-h-full bg-black relative">
       <iframe
         src={streamUrl}
-        className="w-full h-full border-0 absolute inset-0"
+        className="w-full h-full min-h-full border-0 absolute inset-0"
         allowFullScreen
+        webkitallowfullscreen="true"
+        mozallowfullscreen="true"
+        playsInline
+        webkit-playsinline="true"
         scrolling="no"
-        allow="autoplay; encrypted-media; picture-in-picture"
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
       />
     </div>
   );

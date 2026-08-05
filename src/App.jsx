@@ -24,6 +24,24 @@ function App() {
     window.scrollTo(0, 0);
   }, [location]);
 
+  // Update canonical link and Open Graph URL on location change
+  useEffect(() => {
+    let canonical = document.querySelector("link[rel='canonical']");
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    const path = location.pathname === "/" ? "" : location.pathname;
+    canonical.setAttribute("href", `https://zenimes.onrender.com${path}`);
+
+    let ogUrl = document.querySelector("meta[property='og:url']");
+    if (ogUrl) {
+      ogUrl.setAttribute("content", `https://zenimes.onrender.com${path}`);
+    }
+  }, [location]);
+
+
   // Check if the current route is for the splash screen
   const isSplashScreen = location.pathname === "/";
 
