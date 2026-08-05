@@ -11,10 +11,16 @@ export default function Player({ streamUrl }) {
   }
 
   return (
-    <div className="w-full h-full min-h-full bg-black relative">
+    <div className="w-full h-full min-h-full bg-black relative flex items-center justify-center overflow-hidden">
       <iframe
         src={streamUrl}
-        className="w-full h-full min-h-full border-0 absolute inset-0"
+        className="w-full h-full min-h-full border-0 absolute top-0 left-0"
+        style={{
+          width: "100%",
+          height: "100%",
+          maxWidth: "100%",
+          maxHeight: "100%",
+        }}
         allowFullScreen
         webkitallowfullscreen="true"
         mozallowfullscreen="true"
