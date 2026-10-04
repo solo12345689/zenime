@@ -27,22 +27,46 @@ export default async function fetchAnimeInfo(id, random = false) {
       }
     }
 
+    let fetchedRelatedData = [];
+    if (details.postId) {
+      try {
+        const relRes = await axios.get(`${api_url}/anime/${details.postId}/recommendations`);
+        // The backend might return an array directly, or inside 'results', 'recommendations', or 'data'
+        const results = Array.isArray(relRes.data) 
+          ? relRes.data 
+          : (relRes.data.results || relRes.data.recommendations || relRes.data.data || []);
+        
+        fetchedRelatedData = results.slice(0, 10).map(item => ({
+          ...item,
+          id: item.slug,
+          title: item.title_jp || item.title_en,
+          japanese_title: item.title_en || item.title_jp,
+          tvInfo: { sub: "SUB", dub: "DUB", showType: "TV" }
+        }));
+      } catch(e) {
+        console.error("Error fetching related anime by recommendations endpoint:", e);
+      }
+    }
+
     const mappedDetails = {
       ...details,
       id: details.slug,
-      title: details.title_en || details.title_jp,
+      title: details.title_jp || details.title_en,
+      japanese_title: details.title_en || details.title_jp,
       description: details.synopsis,
       poster: poster || "https://i.postimg.cc/rFZnx5tQ/2-Kn-Kzog-md.webp",
-      genres: details.metadata?.Genre ? details.metadata.Genre.split(",").map(g => g.trim()) : [],
+      genres: details.metadata?.Genres || details.metadata?.Genre ? (details.metadata.Genres || details.metadata.Genre).split(",").map(g => g.trim()) : [],
       charactersVoiceActors: [],
       recommended_data: [],
-      related_data: [],
+      related_data: fetchedRelatedData,
       animeInfo: {
         tvInfo: {
           rating: details.metadata?.Rating || "PG-13",
           quality: details.metadata?.Quality || "HD",
           sub: details.metadata?.Language ? (details.metadata.Language.toLowerCase().includes("sub") ? "SUB" : "") : "",
           dub: details.metadata?.Language ? (details.metadata.Language.toLowerCase().includes("dub") ? "DUB" : "") : "",
+          showType: details.metadata?.Type || "TV",
+          duration: details.metadata?.Duration || "24m",
         }
       }
     };

@@ -109,15 +109,25 @@ export default function Watch() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeId, animeId, navigate, episodes, initialPostId]);
 
-  // Update document title
+  // Update document title and prevent unwanted redirects (hijacking)
   useEffect(() => {
     if (animeInfo) {
       document.title = `Watch ${animeInfo.title} English Sub/Dub online Free on ${website_name}`;
     }
+    
+    // Prevent 3rd party iframes from redirecting the top-level page
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ""; // Required for Chrome to show the warning prompt
+    };
+    
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
       document.title = `${website_name} | Free anime streaming platform`;
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [animeId]);
+  }, [animeInfo, animeId]);
 
   // Redirect if no episodes
   useEffect(() => {
@@ -540,11 +550,11 @@ export default function Watch() {
           {animeInfo?.charactersVoiceActors.length > 0 && (
             <Voiceactor animeInfo={animeInfo} className="!mt-0" />
           )}
-          {animeInfo?.recommended_data.length > 0 ? (
+          {animeInfo && animeInfo.related_data && animeInfo.related_data.length > 0 ? (
             <CategoryCard
               label="Recommended for you"
-              data={animeInfo?.recommended_data}
-              limit={animeInfo?.recommended_data.length}
+              data={animeInfo.related_data}
+              limit={animeInfo.related_data.length}
               showViewMore={false}
             />
           ) : (
@@ -552,22 +562,21 @@ export default function Watch() {
           )}
         </div>
         <div>
-          {animeInfo && animeInfo.related_data ? (
-            <Sidecard
-              label="Related Anime"
-              data={animeInfo.related_data}
-              className="mt-[15px]"
-            />
-          ) : (
-            <SidecardLoader className={"mt-[25px]"} />
-          )}
-          {homeInfo && homeInfo.most_popular && (
+          {homeInfo && homeInfo.most_popular ? (
             <Sidecard
               label="Most Popular"
-              data={homeInfo.most_popular.slice(0, 10)}
+              data={homeInfo.most_popular.slice(0, 10).map(item => ({
+                ...item,
+                id: item.slug,
+                title: item.title_jp || item.title_en,
+                japanese_title: item.title_en || item.title_jp,
+                tvInfo: { sub: "SUB", dub: "DUB", showType: "TV" }
+              }))}
               className="mt-[15px]"
               limit={10}
             />
+          ) : (
+            <SidecardLoader className={"mt-[15px]"} />
           )}
         </div>
       </div>

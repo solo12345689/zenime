@@ -9,6 +9,7 @@ import Error from "@/src/components/error/Error.jsx";
 import { useHomeInfo } from "@/src/context/HomeInfoContext.jsx";
 import Schedule from "@/src/components/schedule/Schedule";
 import ContinueWatching from "@/src/components/continue/ContinueWatching";
+import SEO from "@/src/components/seo/SEO";
 
 function Home() {
   const { homeInfo, homeInfoLoading, error } = useHomeInfo();
@@ -17,6 +18,10 @@ function Home() {
   if (!homeInfo) return <Error error="404" />;
   return (
     <>
+      <SEO 
+        title={`${website_name} | Watch Free Anime Online | Hindi Dubbed & English Sub Anime`}
+        description="Stream free anime online in HD quality on Zenime. Watch Hindi Dubbed anime, English Subbed & Dubbed series and movies with zero ads!"
+      />
       <div className="px-4 w-full max-[1200px]:px-0">
         <h1 className="sr-only">Watch Free Anime Online | Hindi & English Sub/Dub Anime - Zenime</h1>
         <Spotlight spotlights={homeInfo.spotlights} />

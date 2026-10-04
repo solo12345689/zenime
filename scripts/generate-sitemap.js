@@ -2,12 +2,14 @@ import fs from "fs";
 import path from "path";
 import https from "https";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const DOMAIN = "https://zenimes.onrender.com";
-const API_BASE = "https://desidubanime-api.onrender.com/api";
+const API_BASE = process.env.VITE_API_URL;
 const SITEMAP_PATH = path.join(__dirname, "../public/sitemap.xml");
 
 function fetchJson(url) {
@@ -72,8 +74,11 @@ async function generateSitemap() {
   staticRoutes.forEach((route) => addUrl(`${DOMAIN}${route}`, "1.00"));
 
   // 2. Fetch Home Data
-  const homeData = await fetchJson(`${API_BASE}/home`);
-  if (homeData) {
+  if (!API_BASE) {
+    console.warn("⚠️ VITE_API_URL is not set in the environment. Skipping dynamic sitemap generation. Only static routes will be included.");
+  } else {
+    const homeData = await fetchJson(`${API_BASE}/home`);
+    if (homeData) {
     const collections = [
       homeData.spotlights,
       homeData.latest_episodes,
@@ -93,7 +98,6 @@ async function generateSitemap() {
           const slug = item.slug || item.id;
           if (slug) {
             addUrl(`${DOMAIN}/${slug}`, "0.80");
-            addUrl(`${DOMAIN}/watch/${slug}`, "0.70");
           }
         });
       }
@@ -111,26 +115,28 @@ async function generateSitemap() {
       });
     }
   }
+  }
 
   // 3. Fetch Popular and Top Airing pages for more anime entries
-  const pagesToFetch = [
-    `${API_BASE}/category/most-popular?page=1`,
-    `${API_BASE}/category/most-popular?page=2`,
-    `${API_BASE}/category/top-airing?page=1`,
-    `${API_BASE}/category/top-airing?page=2`,
-    `${API_BASE}/category/completed?page=1`,
-  ];
+  if (API_BASE) {
+    const pagesToFetch = [
+      `${API_BASE}/category/most-popular?page=1`,
+      `${API_BASE}/category/most-popular?page=2`,
+      `${API_BASE}/category/top-airing?page=1`,
+      `${API_BASE}/category/top-airing?page=2`,
+      `${API_BASE}/category/completed?page=1`,
+    ];
 
-  for (const pageUrl of pagesToFetch) {
-    const pageData = await fetchJson(pageUrl);
-    if (pageData && Array.isArray(pageData.animes)) {
-      pageData.animes.forEach((item) => {
-        const slug = item.slug || item.id;
-        if (slug) {
-          addUrl(`${DOMAIN}/${slug}`, "0.80");
-          addUrl(`${DOMAIN}/watch/${slug}`, "0.70");
-        }
-      });
+    for (const pageUrl of pagesToFetch) {
+      const pageData = await fetchJson(pageUrl);
+      if (pageData && Array.isArray(pageData.animes)) {
+        pageData.animes.forEach((item) => {
+          const slug = item.slug || item.id;
+          if (slug) {
+            addUrl(`${DOMAIN}/${slug}`, "0.80");
+          }
+        });
+      }
     }
   }
 
@@ -144,7 +150,6 @@ ${urlEntries
   .map(
     (entry) => `  <url>
     <loc>${escapeXml(entry.loc)}</loc>
-    <lastmod>${currentDate}</lastmod>
     <priority>${entry.priority}</priority>
   </url>`
   )

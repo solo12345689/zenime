@@ -22,14 +22,14 @@ const getCategoryInfo = async (path, page) => {
     if (path.startsWith("az-list")) {
       const parts = path.split("/");
       let letter = parts[parts.length - 1];
-      if (letter === "az-list" || !letter) {
-        letter = "A";
+      if (letter === "az-list" || !letter || letter === "all") {
+        letter = "all";
       }
-      const response = await axios.get(`${api_url}/az-list?letter=${letter}`);
+      const response = await axios.get(`${api_url}/az-list?letter=${letter}&page=${page}`);
       const list = (response.data.results || []).map(mapItem);
       return {
         data: list,
-        totalPages: 1,
+        totalPages: response.data.max_pages || 1,
       };
     }
 

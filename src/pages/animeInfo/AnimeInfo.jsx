@@ -77,6 +77,8 @@ function Tag({ bgColor, index, icon, text }) {
   );
 }
 
+import SEO from "@/src/components/seo/SEO";
+
 function AnimeInfo({ random = false }) {
   const { language } = useLanguage();
   const { id: paramId } = useParams();
@@ -111,14 +113,7 @@ function AnimeInfo({ random = false }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [id, random]);
-  useEffect(() => {
-    if (animeInfo && location.pathname === `/${animeInfo.id}`) {
-      document.title = `Watch ${animeInfo.title} English Sub/Dub online Free on ${website_name}`;
-    }
-    return () => {
-      document.title = `${website_name} | Free anime streaming platform`;
-    };
-  }, [animeInfo]);
+
   if (loading) return <Loader type="animeInfo" />;
   if (error) {
     return <Error />;
@@ -127,7 +122,7 @@ function AnimeInfo({ random = false }) {
     navigate("/404-not-found-page");
     return undefined;
   }
-  const { title, japanese_title, poster, animeInfo: info } = animeInfo;
+  const { title, japanese_title, poster, animeInfo: info, description } = animeInfo;
   const tags = [
     {
       condition: info.tvInfo?.rating,
@@ -155,6 +150,11 @@ function AnimeInfo({ random = false }) {
 
   return (
     <>
+      <SEO 
+        title={`Watch ${language === "EN" ? title : japanese_title} English Sub/Dub online Free on ${website_name}`}
+        description={description ? description.slice(0, 160) : `Watch ${language === "EN" ? title : japanese_title} English Sub/Dub online Free on ${website_name}`}
+        image={poster}
+      />
       <div className="relative grid grid-cols-[minmax(0,75%),minmax(0,25%)] h-fit w-full overflow-hidden text-white mt-[64px] max-[1200px]:flex max-[1200px]:flex-col max-md:mt-[50px]">
         <img
           src={`${poster}`}
@@ -179,7 +179,7 @@ function AnimeInfo({ random = false }) {
               {[
                 ["Home", "home"],
                 [info.tvInfo?.showType, info.tvInfo?.showType],
-              ].map(([text, link], index) => (
+              ].filter(([text]) => text).map(([text, link], index) => (
                 <li key={index} className="flex gap-x-3 items-center">
                   <Link
                     to={`/${link}`}
@@ -265,7 +265,7 @@ function AnimeInfo({ random = false }) {
             )}
             <p className="text-[14px] max-[575px]:hidden">
               {`${website_name} is the best site to watch `}
-              <span className="font-bold">{title}</span>
+              <span className="font-bold">{language === "EN" ? title : japanese_title}</span>
             </p>
             <div className="flex gap-x-4 items-center mt-4 max-[575px]:w-full max-[575px]:justify-center max-[320px]:hidden">
               <img

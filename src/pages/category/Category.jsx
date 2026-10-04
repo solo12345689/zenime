@@ -8,6 +8,7 @@ import { useHomeInfo } from "@/src/context/HomeInfoContext";
 import PageSlider from "@/src/components/pageslider/PageSlider";
 import SidecardLoader from "@/src/components/Loader/Sidecard.loader";
 import CategoryCardLoader from "@/src/components/Loader/CategoryCard.loader";
+import SEO from "@/src/components/seo/SEO";
 
 function Category({ path, label }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,8 +46,17 @@ function Category({ path, label }) {
 
   if (error) return <Error />;
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
-    <div className="w-full px-4 max-[1200px]:px-0">
+    <>
+      <SEO 
+        title={`${capitalizeFirstLetter(label)} Anime | Zenime`}
+        description={`Browse the best ${label} anime on Zenime. Watch HD streaming for free with no ads!`}
+      />
+      <div className="w-full px-4 max-[1200px]:px-0">
       <div className="grid grid-cols-[minmax(0,75%),minmax(0,25%)] gap-x-6 max-[1200px]:flex flex-col max-[1200px]:px-4">
         <div>
           {loading ? (
@@ -83,6 +93,7 @@ function Category({ path, label }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

@@ -60,16 +60,27 @@ export const useWatch = (animeId, initialEpisodeId, initialPostId) => {
         
         const postId = initialPostId || animeData?.postId;
         if (postId) {
-          const episodesData = await getEpisodes(animeId, postId);
+          let hasSetDefaultEpisode = false;
+          
+          const episodesData = await getEpisodes(animeId, postId, (partialEpisodes, totalCount) => {
+            setEpisodes([...partialEpisodes]);
+            setTotalEpisodes(totalCount);
+            
+            // Set default episode immediately on first batch if not provided
+            if (!hasSetDefaultEpisode) {
+              const defaultEpisodeSlug =
+                initialEpisodeId ||
+                (partialEpisodes?.length > 0 ? partialEpisodes[0].slug : null);
+              if (defaultEpisodeSlug) {
+                setEpisodeId(defaultEpisodeSlug);
+                hasSetDefaultEpisode = true;
+              }
+            }
+          });
+          
+          // Final fallback
           setEpisodes(episodesData?.episodes || []);
           setTotalEpisodes(episodesData?.totalEpisodes || 0);
-
-          const defaultEpisodeSlug =
-            initialEpisodeId ||
-            (episodesData?.episodes?.length > 0
-              ? episodesData.episodes[0].slug
-              : null);
-          setEpisodeId(defaultEpisodeSlug);
         }
       } catch (err) {
         console.error("Error fetching initial data:", err);

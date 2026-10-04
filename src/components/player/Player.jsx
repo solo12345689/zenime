@@ -28,6 +28,7 @@ export default function Player({ streamUrl }) {
         webkit-playsinline="true"
         scrolling="no"
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+        referrerPolicy="no-referrer"
       />
     </div>
   );
