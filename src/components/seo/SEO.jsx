@@ -7,7 +7,7 @@ export default function SEO({ title, description, image, type = 'website' }) {
   const canonicalUrl = `https://zenimes.onrender.com${location.pathname === '/' ? '' : location.pathname}`;
   
   const defaultTitle = `${website_name} | Free anime streaming platform`;
-  const defaultDescription = "Watch free anime online in HD on Zenime. Stream latest Hindi Anime, English Subbed and Dubbed series, movies, and episodes with zero ads. Free anime streaming platform!";
+  const defaultDescription = "Watch free anime online in HD on Zenime. Stream latest Hindi Anime, English Sub/Dub series, and episodes with zero ads. Free streaming platform!";
   const defaultImage = "https://i.postimg.cc/pVqqMKkR/2IAVHlI.webp";
 
   const seoTitle = title || defaultTitle;

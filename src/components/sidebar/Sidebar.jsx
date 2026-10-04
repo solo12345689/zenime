@@ -109,10 +109,6 @@ const Sidebar = ({ isOpen, onClose }) => {
               { name: "School", path: "/genre/school" },
               { name: "Family", path: "/genre/family" },
               { name: "Most Popular", path: "/most-popular" },
-              {
-                name: "Join Telegram",
-                path: "https://t.me/zenime_discussion",
-              },
             ].map((item, index) => (
               <li
                 key={index}
